@@ -13,31 +13,31 @@ models:
         description: "{{ doc('order') }}"
         data_tests: [unique, not_null]
       - name: customer_id
-        description: "Customer account that placed the order (key to dim_customers)."
+        description: "Account that placed the order."
         tags: ['pii']
         meta: {classification: confidential}
         data_tests: [not_null]
       - name: order_date
-        description: "Date the order was placed (DATE, YYYY-MM-DD)."
+        description: "Order date (YYYY-MM-DD)."
       - name: status
-        description: "Lifecycle status of the order."
+        description: "Order status."
         data_tests:
           - accepted_values:
               arguments:
                 values: ['pending', 'shipped', 'delivered', 'cancelled', 'returned']
       - name: channel
-        description: "Sales channel where the order was placed (web, mobile_app, marketplace)."
+        description: "web, mobile_app or marketplace."
       - name: shipping_country
-        description: "Delivery country as ISO 3166 alpha-2 code."
+        description: "Delivery country code."
       - name: gross_revenue_eur
         description: "{{ doc('gross_revenue') }}"
       - name: refunded_eur
-        description: "Sum of the refunded payments of the order in EUROS with 2 decimals, VAT included. 0 if no refund."
+        description: "Refunded amount of the order in euros, VAT included. 0 if no refund."
       - name: net_revenue_eur
         description: "{{ doc('net_revenue') }}"
 
   - name: dim_customers
-    description: "One row per customer account with its profile and lifetime order metrics. Used by the churn model and customer segmentation."
+    description: "One row per customer account with profile and lifetime metrics. Used by the churn model."
     meta:
       owner: "Sara Martin (Head of Sales)"
       steward: "Karim Benali (Analytics Engineer)"
@@ -50,36 +50,37 @@ models:
         meta: {classification: confidential}
         data_tests: [unique, not_null]
       - name: first_name
-        description: "First name of the customer."
+        description: "First name."
         tags: ['pii']
         meta: {classification: confidential}
       - name: last_name
-        description: "Last name of the customer."
+        description: "Last name."
         tags: ['pii']
         meta: {classification: confidential}
       - name: email
-        description: "Login email, lower-cased."
+        description: "Login email."
         tags: ['pii']
         meta: {classification: confidential}
       - name: country_code
-        description: "Country of the customer as ISO 3166 alpha-2 code (FR, DE, ES, BE)."
+        description: "Country code: FR, DE, ES or BE."
         data_tests:
           - accepted_values:
               arguments:
                 values: ['FR', 'DE', 'ES', 'BE']
       - name: loyalty_tier
-        description: "Loyalty programme level (bronze, silver, gold, platinum)."
+        description: "bronze, silver, gold or platinum."
       - name: signup_date
-        description: "Date the customer account was created."
+        description: "Account creation date."
       - name: has_marketing_consent
-        description: "True if the customer agreed to receive marketing emails (GDPR consent)."
+        description: "True if the customer accepted marketing emails."
         tags: ['pii']
         meta: {classification: confidential}
       - name: lifetime_orders
-        description: "Number of orders placed by the account since signup, all statuses included."
+        description: "Number of orders of the account, all statuses."
       - name: last_order_date
+        # inclut les annulees, donc pas suffisant pour active customer
         description: |
-          Date of the most recent order of the account, all statuses included (cancelled too). Null if the account never ordered. Do not use it alone to count active customers:
+          Last order date of the account, cancelled orders included. Null if no order.
 
           {{ doc('active_customer') }}
 
@@ -88,6 +89,6 @@ models:
           {{ doc('churned_customer') }}
       - name: lifetime_net_revenue_eur
         description: |
-          Sum of the net revenue of all orders of the account (euros, VAT excluded). 0 if no order.
+          Total net revenue of the account in euros. 0 if no order.
 
           {{ doc('net_revenue') }}

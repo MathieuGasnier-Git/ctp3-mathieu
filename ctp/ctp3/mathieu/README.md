@@ -1,19 +1,14 @@
-# CTP 3 - Catalog, Lineage & Glossary (Mathieu)
+# CTP 3 - Catalog, Lineage & Glossary
+
+Rendu CTP 3 de Mathieu, copies des fichiers du projet `03_CTP3/shopfast_dbt/`.
 
 ## Fichiers
 
-| Fichier | Exercice |
-|---|---|
-| `_staging.yml` | Ex 1 : descriptions, owners, PII et tests des 5 modeles staging |
-| `_marts.yml` | Ex 1 + 3 : fct_orders et dim_customers, liens `doc()` vers le glossaire |
-| `check_governance_output.txt` | Ex 1 : sortie de `check_governance.py` (PASSED) |
-| `exposures.yml` | Ex 2 : 3 exposures (Sales dashboard, Finance report, churn model) |
-| `impact_payments_cents.md` | Ex 2 : note d'impact en 5 lignes |
-| `glossary_template.csv` | Ex 3 : 6 termes (5 du template + recently active customer) |
-| `glossary.md` | Ex 3 : docs blocks dbt du glossaire |
-| `data_dictionary_template.csv` | Ex 4 : 15 colonnes de stg_orders et stg_payments |
-
-Ce sont des copies des fichiers du projet `03_CTP3/shopfast_dbt/`.
+- `_staging.yml`, `_marts.yml` : descriptions, owners, PII, tests (ex 1) et liens vers le glossaire (ex 3)
+- `check_governance_output.txt` : sortie de `check_governance.py` (PASSED)
+- `exposures.yml`, `impact_payments_cents.md` : 3 exposures et note d'impact (ex 2)
+- `glossary_template.csv`, `glossary.md` : 6 termes du glossaire (ex 3)
+- `data_dictionary_template.csv` : dictionnaire de stg_orders et stg_payments (ex 4)
 
 ## Relancer
 
@@ -27,6 +22,11 @@ set DBT_PROFILES_DIR=.
 dbt build
 dbt docs generate
 python check_governance.py
-dbt ls --select source:shopfast_raw.payments+
 python export_dictionary.py
 ```
+
+## Dictionnaire vs export dbt
+
+Les descriptions, owners et colonnes PII sont les memes dans les deux.
+L'export dbt n'a pas le type, les bornes (ex : amount entre 13.70 et 1400.79), le nullable, l'exemple ni le source system.
+Les valeurs autorisees existent seulement comme tests, et les colonnes non PII n'ont pas de classification dans le YAML.
