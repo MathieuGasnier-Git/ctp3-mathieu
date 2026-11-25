@@ -1,16 +1,16 @@
 table,column,business_meaning,data_type,unit_or_format,allowed_values_or_range,nullable_Y_N,example_value,personal_data_Y_N,classification,owner,source_system
-stg_orders,order_id,,,,,,,,,,
-stg_orders,customer_id,,,,,,,,,,
-stg_orders,order_date,,,,,,,,,,
-stg_orders,status,,,,,,,,,,
-stg_orders,channel,,,,,,,,,,
-stg_orders,shipping_country,,,,,,,,,,
-stg_orders,total_amount_eur,,,,,,,,,,
-stg_payments,payment_id,,,,,,,,,,
-stg_payments,order_id,,,,,,,,,,
-stg_payments,payment_date,,,,,,,,,,
-stg_payments,method,,,,,,,,,,
-stg_payments,amount,,,,,,,,,,
-stg_payments,currency,,,,,,,,,,
-stg_payments,card_last4,,,,,,,,,,
-stg_payments,payment_status,,,,,,,,,,
+stg_orders,order_id,"Identifier of an order placed on ShopFast (one row per order, 7 raw duplicates removed)",INTEGER,6-digit id,"700001 to 705200, unique",N,700004,N,internal,Sara Martin (Head of Sales),ShopFast e-commerce platform (raw.orders / data/orders.csv)
+stg_orders,customer_id,Customer account that placed the order (key to stg_customers),INTEGER,5-digit id,10001 to 20962; 14 orders point to an unknown customer,N,10607,Y,confidential,Sara Martin (Head of Sales),ShopFast e-commerce platform (raw.orders / data/orders.csv)
+stg_orders,order_date,Date the order was placed by the customer,DATE,YYYY-MM-DD,2025-01-01 to 2027-03-13 (5 orders in the future = data issue),Y,2025-11-03,N,internal,Sara Martin (Head of Sales),ShopFast e-commerce platform (raw.orders / data/orders.csv)
+stg_orders,status,Where the order is in its lifecycle,VARCHAR,lower case text,"pending, shipped, delivered, cancelled, returned",N,delivered,N,internal,Sara Martin (Head of Sales),ShopFast e-commerce platform (raw.orders / data/orders.csv)
+stg_orders,channel,Sales channel where the order was placed,VARCHAR,lower case text,"web, mobile_app, marketplace",N,web,N,internal,Sara Martin (Head of Sales),ShopFast e-commerce platform (raw.orders / data/orders.csv)
+stg_orders,shipping_country,Country where the order is delivered,VARCHAR,"ISO 3166 alpha-2, 2 letters","FR, DE, ES, BE",N,ES,N,internal,Sara Martin (Head of Sales),ShopFast e-commerce platform (raw.orders / data/orders.csv)
+stg_orders,total_amount_eur,"Total paid by the customer for the order, VAT and shipping fee (4.99 under 50 EUR) included, before refunds","DECIMAL(10,2)",EUROS with 2 decimals,-49.90 to 1400.79; should be > 0 (6 orders <= 0 = data issue),N,54.50,N,confidential,Sara Martin (Head of Sales),ShopFast e-commerce platform (raw.orders / data/orders.csv)
+stg_payments,payment_id,Identifier of one payment event at the payment provider,INTEGER,6-digit id,"900001 to 904902, unique",N,900003,N,internal,Paul Girard (Head of Finance),Payment service provider (raw.payments / data/payments.csv)
+stg_payments,order_id,Order paid or refunded by this event (key to stg_orders),INTEGER,6-digit id,"700002 to 705200, all exist in stg_orders",N,700004,N,internal,Paul Girard (Head of Finance),Payment service provider (raw.payments / data/payments.csv)
+stg_payments,payment_date,Date the money was captured or refunded,DATE,YYYY-MM-DD,2025-01-01 to 2026-11-13,N,2025-11-03,N,internal,Paul Girard (Head of Finance),Payment service provider (raw.payments / data/payments.csv)
+stg_payments,method,Payment method chosen by the customer,VARCHAR,lower case text,"card, paypal, bank_transfer, apple_pay",N,apple_pay,N,internal,Paul Girard (Head of Finance),Payment service provider (raw.payments / data/payments.csv)
+stg_payments,amount,"Amount of money captured or refunded by this event; always positive, the direction is in payment_status","DECIMAL(12,2)","EUROS with 2 decimals (54.50 = 54 euros 50), NOT cents",13.70 to 1400.79; > 0,N,54.50,N,confidential,Paul Girard (Head of Finance),Payment service provider (raw.payments / data/payments.csv)
+stg_payments,currency,Currency of amount,VARCHAR,"ISO 4217, 3 letters",EUR only,N,EUR,N,internal,Paul Girard (Head of Finance),Payment service provider (raw.payments / data/payments.csv)
+stg_payments,card_last4,Last 4 digits of the bank card used (payment data linked to a person via order_id),VARCHAR,4 digits as text,"0000 to 9999; should be empty when method <> card (1469 rows filled for non-card, 1059 card rows empty)",Y,6552,Y,restricted,Paul Girard (Head of Finance),Payment service provider (raw.payments / data/payments.csv)
+stg_payments,payment_status,Type of payment event: money received or money sent back,VARCHAR,lower case text,"captured, refunded",N,captured,N,internal,Paul Girard (Head of Finance),Payment service provider (raw.payments / data/payments.csv)
