@@ -1,0 +1,19 @@
+# python
+venv/
+.venv/
+__pycache__/
+
+# dbt
+shopfast.duckdb
+target/
+logs/
+dbt_packages/
+
+# pdf et copies locales du kit
+*.pdf
+shopfast-kit/
+CTP 3 starter files*/
+
+# genere par export_dictionary.py
+data_dictionary_from_dbt.csv
+.user.yml

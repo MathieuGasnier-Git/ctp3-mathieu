@@ -1,0 +1,42 @@
+version: 2
+
+# CTP 3 - Exercise 1: document and govern the staging models.
+# For each model: description, meta (owner, steward, domain, tier); for each column: description,
+# and for personal data: tags: ['pii'] + meta: {classification: confidential|restricted}.
+
+models:
+  - name: stg_customers
+    description: "One row per customer account, cleaned from raw.customers (exact duplicate rows removed, ISO country codes, ISO dates)."
+    meta:
+      owner: "Sara Martin (Head of Sales)"
+      steward: "Karim Benali (Analytics Engineer)"
+      domain: customer
+      tier: gold
+    columns:
+      - name: customer_id
+        description: "Technical identifier of the customer account. One person may have several accounts (see duplicates)."
+        data_tests: [unique, not_null]
+      - name: email
+        description: "Login email, trimmed and lower-cased."
+        tags: ['pii']
+        meta: {classification: confidential}
+      # TODO: document first_name, last_name, phone, birth_date, city, country_code, signup_date,
+      #       has_marketing_consent, loyalty_tier  (description + pii tag/classification where needed)
+      # TODO: add a test: accepted_values on country_code (FR, DE, ES, BE) and on loyalty_tier
+
+  - name: stg_orders
+    description: "TODO: one sentence a business user understands"
+    # TODO: meta owner / steward / domain / tier
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      # TODO: document customer_id, order_date, status, channel, shipping_country, total_amount_eur
+      # TODO: test accepted_values on status
+
+  - name: stg_order_items
+    description: "One row per product line of an order."
+  - name: stg_payments
+    description: "One row per payment event from the payment provider (captured or refunded)."
+    # TODO: what is the UNIT of amount? Document it - this is the cents incident!
+  - name: stg_products
+    description: "Product catalogue with list prices."

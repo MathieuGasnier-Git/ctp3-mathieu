@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: fct_orders
+    description: "One row per order with gross, refunded and net revenue. Source of the Sales dashboard and the Finance report."
+    meta:
+      owner: "Sara Martin (Head of Sales)"
+      domain: sales
+      tier: gold
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: net_revenue_eur
+        description: "TODO (Exercise 3): replace with the glossary term net_revenue using the doc() function"
+      # TODO: document the other columns
+
+  - name: dim_customers
+    description: "TODO"
+    # TODO: meta owner / steward / domain / tier, column docs, PII tags
